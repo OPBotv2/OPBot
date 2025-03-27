@@ -3,7 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const { Client, Collection, GatewayIntentBits, REST, Routes } = require('discord.js');
 const log = require('./utils/log');
-const setupDatabase = require('./database/setup')
+const setupDatabase = require('./database/setup');
+const { loadButtons } = require('./handlers/buttonHandler');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
@@ -14,6 +15,7 @@ const commandFolders = fs.readdirSync('./commands');
 log.init(client);
 
 setupDatabase();
+loadButtons();
 
 for (const folder of commandFolders) {
     const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
