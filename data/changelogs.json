@@ -1,0 +1,22 @@
+[
+    {
+      "version": "v1.3.0",
+      "date": "2025-03-26",
+      "entries": [
+        "📚 Interaktives /help mit Dropdown und Paginierung",
+        "♻️ Reload-Command: `/reload buttons`",
+        "🔘 Globaler ButtonHandler mit Auto-Loader",
+        "🛠 Bugfix für `help/next` Button bei fehlender Komponente"
+      ]
+    },
+    {
+      "version": "v1.2.0",
+      "date": "2025-03-24",
+      "entries": [
+        "💰 Economy-System mit MySQL-Anbindung",
+        "🧾 `/pay`, `/top`, `/use` und `/shop`-Commands",
+        "📦 Automatische Datenbank-Tabellen-Erstellung"
+      ]
+    }
+  ]
+  
