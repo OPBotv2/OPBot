@@ -5,6 +5,9 @@ const { Client, Collection, GatewayIntentBits, REST, Routes } = require('discord
 const log = require('./utils/log');
 const setupDatabase = require('./database/setup');
 const { loadButtons } = require('./handlers/buttonHandler');
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 8085;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
@@ -16,6 +19,7 @@ log.init(client);
 
 setupDatabase();
 loadButtons();
+app.use(express.json());
 
 for (const folder of commandFolders) {
     const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
@@ -57,6 +61,34 @@ for (const folder of eventFolders) {
         }
     }
 }
+
+app.post('/github-webhook', (req, res) => {
+    const payload = req.body;
+    const event = req.headers['x-github-event'];
+
+    if (event === 'push') {
+        const commits = payload.commits.map(commit => `[\`${commit.id.substring(0, 7)}\`](${commit.url}) ${commit.message} – *${commit.author.name}*`).join('\n');
+        const message = `📢 **Neuer Push in ${payload.repository.full_name}**\n${commits}`;
+        sendMessageToDiscordChannel(message);
+    }
+    // Weitere Ereignisse wie 'issues' oder 'pull_request' können hier verarbeitet werden
+
+    res.status(200).send('Webhook empfangen');
+});
+
+// sendMessage
+function sendMessageToDiscordChannel(message) {
+    const channel = client.channels.cache.get('1301629741576753204');
+    if (channel) {
+        channel.send(message);
+    } else {
+        console.error('Kanal nicht gefunden');
+    }
+}
+
+app.listen(PORT, () => {
+    console.log(`Webhook-Listener läuft auf Port ${PORT}`);
+});
 
 // Interaktionen laden
 const interactionHandler = require('./interaction/interactioncreate');
