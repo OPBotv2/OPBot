@@ -1,0 +1,28 @@
+<!-- web/views/home.ejs -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Willkommen beim OPBot</title>
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+  <h1>🎉 Willkommen beim OPBot Dashboard</h1>
+
+  <% if (user) { %>
+    <div class="user-info">
+      <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="Avatar">
+      <p>Eingeloggt als <strong><%= user.username %>#<%= user.discriminator %></strong></p>
+      <p><a href="/dashboard" class="login-btn">➡️ Zum Dashboard</a></p>
+      <p><a href="/logout" class="login-btn">🚪 Logout</a></p>
+    </div>
+  <% } else { %>
+    <div class="login-box">
+      <p>🔐 Melde dich mit Discord an, um dein Dashboard zu verwalten.</p>
+      <a href="/auth/discord" class="login-btn">Mit Discord einloggen</a>
+    </div>
+  <% } %>
+
+  <footer>© OPBot Dashboard</footer>
+</body>
+</html>

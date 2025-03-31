@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📊 Dashboard Übersicht</title>
+  <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+  <header>
+    <h1>📊 Deine Server</h1>
+  </header>
+
+  <main>
+    <div class="guilds">
+      <% guilds.forEach(g => { %>
+        <div class="guild-card">
+          <img src="<%= g.iconURL || 'https://cdn.discordapp.com/embed/avatars/1.png' %>" alt="Guild Icon" class="guild-icon">
+
+          <div class="guild-info">
+            <h2 class="guild-name"><%= g.name %></h2>
+            <p class="status">
+              <% if (g.botInGuild) { %>
+                ✅ Bot ist drin
+              <% } else { %>
+                ❌ Bot fehlt
+              <% } %>
+            </p>
+
+            <% if (g.botInGuild) { %>
+              <a href="/dashboard/<%= g.id %>" class="manage-btn">🔧 Einstellungen</a>
+            <% } else { %>
+              <a href="https://discord.com/oauth2/authorize?client_id=<%= clientId %>&scope=bot+applications.commands&permissions=8&guild_id=<%= g.id %>" class="invite-btn">
+                ➕ Bot einladen
+              </a>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </main>
+
+  <footer>
+    <p><a href="/logout">🚪 Logout</a></p>
+    <p>© OPBot Dashboard</p>
+  </footer>
+</body>
+</html>

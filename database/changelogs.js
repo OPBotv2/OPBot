@@ -1,12 +1,12 @@
 const db = require('./mysql'); // deine bestehende DB-Verbindung
 
-async function saveChangelogToDB(version, date, entriesArray) {
+async function saveChangelogToDB(version, date, entriesArray, guildId) {
     const entries = entriesArray.join('\n'); // schöner Formatblock
 
     try {
         await db.query(
-            'INSERT INTO changelogs (version, date, entries) VALUES (?, ?, ?)',
-            [version, date, entries]
+            'INSERT INTO changelogs (version, date, entries, guild_id) VALUES (?, ?, ?)',
+            [version, date, entries, guildId]
         );
         return true;
     } catch (err) {
@@ -32,9 +32,13 @@ async function deleteChangelogFromDB(version) {
     }
 }
 
-async function getAllChangelogs() {
+async function getAllChangelogs(guildId) {
     try {
-        const [rows] = await db.query('SELECT version, date, entries FROM changelogs ORDER BY id DESC');
+        const [rows] = await db.query(
+            'SELECT version, date, entries FROM changelogs WHERE guild_id = ? ORDER BY id DESC',
+            [guildId]
+        );
+
         return rows.map(row => ({
             version: row.version,
             date: row.date,
@@ -46,10 +50,15 @@ async function getAllChangelogs() {
     }
 }
 
-async function getChangelogByVersion(version) {
+async function getChangelogByVersion(version, guildId) {
     try {
-        const [rows] = await db.query('SELECT * FROM changelogs WHERE version = ?', [version]);
+        const [rows] = await db.query(
+            'SELECT * FROM changelogs WHERE version = ? AND guild_id = ? LIMIT 1',
+            [version, guildId]
+        );
+
         if (rows.length === 0) return null;
+
         return {
             version: rows[0].version,
             date: rows[0].date,

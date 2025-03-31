@@ -19,53 +19,48 @@ module.exports = {
 
     async execute(interaction) {
         const versionInput = interaction.options.getString('version');
+        const guildId = interaction.guild?.id;
 
-        const changelogs = await getAllChangelogs();
-        if (!changelogs.length) {
-            return interaction.reply({ content: '❌ Keine Changelogs gefunden.', ephemeral: true });
+        if (!guildId) {
+            return interaction.reply({ content: '❌ Dieser Befehl kann nur in einem Server verwendet werden.', ephemeral: true });
         }
 
-        // Wenn bestimmte Version gewählt wurde
+        const changelogs = await getAllChangelogs(guildId);
+        if (!changelogs.length) {
+            return interaction.reply({ content: '❌ Keine Changelogs für diesen Server gefunden.', ephemeral: true });
+        }
+
+        // 🔍 Direkt nach Version gefragt?
         if (versionInput) {
-            const log = await getChangelogByVersion(versionInput);
+            const log = await getChangelogByVersion(versionInput, guildId);
             if (!log) {
                 return interaction.reply({
-                    content: `❌ Keine Changelog-Einträge für Version \`${versionInput}\` gefunden.`,
+                    content: `❌ Kein Changelog für Version \`${versionInput}\` gefunden.`,
                     ephemeral: true
                 });
             }
 
-            const embed = new EmbedBuilder()
-                .setTitle(`📦 Changelog ${log.version}`)
-                .setDescription(log.entries.map(e => `• ${e}`).join('\n'))
-                .setColor(0x3498DB)
-                .setFooter({ text: `Veröffentlicht am ${log.date}` })
-                .setTimestamp();
-
+            const embed = createChangelogEmbed(log);
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }
 
-        // Wenn keine Version angegeben → neueste anzeigen
+        // 📦 Neueste anzeigen
         const latest = changelogs[0];
-        const embed = new EmbedBuilder()
-            .setTitle(`📦 Neueste Version: ${latest.version}`)
-            .setDescription(latest.entries.map(e => `• ${e}`).join('\n'))
-            .setColor(0x3498DB)
-            .setFooter({ text: `Veröffentlicht am ${latest.date}` })
-            .setTimestamp();
+        const embed = createChangelogEmbed(latest);
 
-        const select = new StringSelectMenuBuilder()
+        // 🔽 Dropdown mit max. 25 Versionen (Discord Limit)
+        const selectMenu = new StringSelectMenuBuilder()
             .setCustomId('select_changelog')
-            .setPlaceholder('Wähle eine andere Version')
+            .setPlaceholder('Wähle eine Version aus')
             .addOptions(
-                changelogs.map(log => ({
+                changelogs.slice(0, 25).map(log => ({
                     label: log.version,
                     description: `Änderungen vom ${log.date}`,
                     value: log.version
                 }))
             );
 
-        const row = new ActionRowBuilder().addComponents(select);
+        const row = new ActionRowBuilder().addComponents(selectMenu);
 
         const reply = await interaction.reply({
             content: '📢 Hier ist der aktuellste Changelog. Wähle eine Version für mehr:',
@@ -81,18 +76,12 @@ module.exports = {
 
         collector.on('collect', async selectInteraction => {
             const selected = selectInteraction.values[0];
-            const log = await getChangelogByVersion(selected);
+            const log = await getChangelogByVersion(selected, guildId);
             if (!log) return;
 
-            const embed = new EmbedBuilder()
-                .setTitle(`📦 Changelog ${log.version}`)
-                .setDescription(log.entries.map(e => `• ${e}`).join('\n'))
-                .setColor(0x3498DB)
-                .setFooter({ text: `Veröffentlicht am ${log.date}` })
-                .setTimestamp();
-
+            const embed = createChangelogEmbed(log);
             await selectInteraction.update({
-                content: `📦 Changelog für Version \`${log.version}\``,
+                content: `📦 Changelog für Version \`${log.version}\`:`,
                 embeds: [embed],
                 components: []
             });
@@ -105,3 +94,13 @@ module.exports = {
         });
     }
 };
+
+// 🔧 Hilfsfunktion für Embed
+function createChangelogEmbed(log) {
+    return new EmbedBuilder()
+        .setTitle(`📦 Changelog ${log.version}`)
+        .setDescription(log.entries.map(e => `• ${e}`).join('\n'))
+        .setColor(0x3498DB)
+        .setFooter({ text: `Veröffentlicht am ${log.date}` })
+        .setTimestamp();
+}

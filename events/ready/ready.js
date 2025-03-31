@@ -1,4 +1,6 @@
 const log = require('../../utils/log');
+const { startWebServer } = require('../../web/server');
+const web = require('../../web/server');
 
 module.exports = {
     name: 'ready',
@@ -6,6 +8,9 @@ module.exports = {
     async execute(client) {
         log.info(`Eingeloggt als ${client.user.tag}`);
         await log.discord(`**${client.user.tag}** ist online.`, 'info');
+        startWebServer(client);
+        log.info('🌐 Webserver wird gestartet...');
+        await log.discord(`🌐 Webserver wird gestartet...`, 'info');
 
         const activities = [
             () => `/balance tippen`,

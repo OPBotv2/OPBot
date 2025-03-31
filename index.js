@@ -35,16 +35,33 @@ for (const folder of commandFolders) {
 
 // Slash-Commands registrieren
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+
 (async () => {
     try {
-        log.info('🔄 Slash-Commands werden registriert...');
+        // GUILD COMMANDS LÖSCHEN
+        log.info('🧹 Entferne vorhandene Guild-Slash-Commands...');
+        const guildCommands = await rest.get(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID));
+        for (const cmd of guildCommands) {
+            await rest.delete(Routes.applicationGuildCommand(process.env.CLIENT_ID, process.env.GUILD_ID, cmd.id));
+        }
+
+        // GLOBAL COMMANDS LÖSCHEN
+        log.info('🧹 Entferne vorhandene globale Slash-Commands...');
+        const globalCommands = await rest.get(Routes.applicationCommands(process.env.CLIENT_ID));
+        for (const cmd of globalCommands) {
+            await rest.delete(Routes.applicationCommand(process.env.CLIENT_ID, cmd.id));
+        }
+
+        // NEU REGISTRIEREN GLOBAL
+        log.info('🔄 Registriere neue globale Slash-Commands...');
         await rest.put(
-            Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
+            Routes.applicationCommands(process.env.CLIENT_ID),
             { body: commands }
         );
-        log.info('✅ Slash-Commands registriert.');
+
+        log.info('✅ Globale Slash-Commands erfolgreich registriert.');
     } catch (error) {
-        log.error(error)
+        log.error('❌ Fehler beim Registrieren der Commands:', error);
     }
 })();
 

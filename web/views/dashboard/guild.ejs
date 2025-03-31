@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>🔧 Einstellungen für <%= guildId %></title>
+  <link rel="stylesheet" href="/css/guild.css">
+</head>
+<body>
+  <h1>🔧 Einstellungen für Server <code><%= guildId %></code></h1>
+
+  <% if (message) { %>
+    <p style="color:red"><%= message %></p>
+  <% } %>
+
+  <% if (settings) { %>
+    <form action="/api/settings/<%= guildId %>" method="POST">
+      <label>Prefix:</label><br>
+      <input type="text" name="prefix" value="<%= settings.prefix %>" /><br><br>
+
+      <label>Changelog Channel ID:</label><br>
+      <input type="text" name="changelog_channel_id" value="<%= settings.changelog_channel_id %>" /><br><br>
+
+      <label>Economy aktivieren:</label>
+      <input type="checkbox" name="economy_enabled" <%= settings.economy_enabled ? 'checked' : '' %> /><br><br>
+
+      <label>Premium:</label>
+      <input type="checkbox" name="is_premium" <%= settings.is_premium ? 'checked' : '' %> /><br><br>
+
+      <button type="submit">💾 Speichern</button>
+    </form>
+  <% } %>
+
+  <hr>
+  <h2>📦 Changelogs</h2>
+
+  <% if (changelogs && changelogs.length > 0) { %>
+    <ul>
+      <% changelogs.forEach(log => { %>
+        <li>
+          <strong><%= log.version %></strong> – <%= log.date %><br>
+          <ul>
+            <% log.entries.forEach(entry => { %>
+              <li>• <%= entry %></li>
+            <% }) %>
+          </ul>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>📭 Keine Changelogs vorhanden.</p>
+  <% } %>
+
+  <p><a href="/dashboard">⬅️ Zurück zur Übersicht</a></p>
+</body>
+</html>

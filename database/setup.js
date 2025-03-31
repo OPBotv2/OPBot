@@ -41,13 +41,31 @@ module.exports = async function setupDatabase() {
     
     await db.query(`
         CREATE TABLE IF NOT EXISTS changelogs (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            version VARCHAR(20) NOT NULL UNIQUE,
-            date DATE NOT NULL,
-            entries TEXT NOT NULL
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          version VARCHAR(20) NOT NULL,
+          date DATE NOT NULL,
+          entries TEXT NOT NULL,
+          guild_id VARCHAR(32) NOT NULL,
+          UNIQUE KEY version_guild (version, guild_id)
         )
     `);
 
+    await db.query(`
+        CREATE TABLE IF NOT EXISTS changelog_channels (
+            guild_id VARCHAR(32) PRIMARY KEY,
+            channel_id VARCHAR(32) NOT NULL
+        )
+    `);
+
+    await db.query(`
+        CREATE TABLE IF NOT EXISTS guild_settings (
+          guild_id VARCHAR(32) NOT NULL,
+          setting_key VARCHAR(64) NOT NULL,
+          setting_value TEXT,
+          PRIMARY KEY (guild_id, setting_key)
+        )
+    `);
+    
     log.info('✅ Datenbanktabellen wurden überprüft/erstellt.');
-    log.discord(`✅ Datenbanktabellen wurden überprüft/erstellt.`, 'info');
+    await log.discord(`✅ Datenbanktabellen wurden überprüft/erstellt.`, 'info');
 };
