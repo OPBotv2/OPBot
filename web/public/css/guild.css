@@ -1,111 +1,189 @@
 body {
-    background-color: #2c2f33;
-    color: #ffffff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding: 40px;
-    text-align: center;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #2c2f33;
+  color: #ffffff;
+}
+
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 240px;
+  background-color: #23272a;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar-header {
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+}
+
+.sidebar h2 {
+  margin: 0;
+  color: #7289da;
+  font-size: 1.5rem;
+}
+
+.server-name {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar nav li {
+  margin: 10px 0;
+}
+
+.sidebar nav a {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.sidebar nav a:hover {
+  background-color: #2c2f3b;
+  color: #7289da;
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px;
+}
+
+h1, h2 {
+  color: #7289da;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+input[type="text"], input[type="checkbox"] {
+  margin-top: 5px;
+  margin-bottom: 20px;
+  padding: 8px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 6px;
+  border: none;
+}
+
+button {
+  background-color: #5865f2;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background-color: #4752c4;
+}
+
+.changelog-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.changelog-list li {
+  margin-bottom: 15px;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+}
+
+/* ...vorherige styles... */
+
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: #7289da;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 6px;
+  z-index: 999;
+}
+
+.nav-link.active {
+  background-color: #7289da;
+  color: white;
+}
+
+.toast {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #43b581;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  z-index: 9999;
+}
+
+.toast.show {
+  display: block;
+  animation: fadein 0.3s, fadeout 0.5s 2s;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeout {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    height: 100%;
+    transition: left 0.3s ease;
+    z-index: 100;
   }
-  
-  h1 {
-    color: #7289da;
-    font-size: 2rem;
-    margin-bottom: 20px;
+
+  .sidebar.open {
+    left: 0;
   }
-  
-  h2 {
-    margin-top: 40px;
-    font-size: 1.6rem;
-    color: #faa61a;
-  }
-  
-  form {
-    background-color: #23272a;
-    padding: 25px;
-    margin: 0 auto;
-    max-width: 500px;
-    border-radius: 10px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
-    text-align: left;
-  }
-  
-  form label {
+
+  .hamburger {
     display: block;
-    margin: 15px 0 5px;
-    font-weight: bold;
   }
-  
-  form input[type="text"],
-  form input[type="number"] {
-    width: 100%;
-    padding: 8px;
-    border: none;
-    border-radius: 5px;
-    background-color: #99aab5;
-    color: #2c2f33;
-    font-weight: bold;
+
+  .main-content {
+    margin-left: 0;
+    padding: 60px 20px;
   }
-  
-  input[type="checkbox"] {
-    transform: scale(1.2);
-    margin-left: 10px;
-  }
-  
-  button {
-    background-color: #5865f2;
-    border: none;
-    padding: 10px 20px;
-    margin-top: 20px;
-    color: white;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-  }
-  
-  button:hover {
-    background-color: #4752c4;
-  }
-  
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 20px auto;
-    max-width: 600px;
-    text-align: left;
-  }
-  
-  ul > li {
-    margin-bottom: 20px;
-    background-color: #23272a;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-  }
-  
-  ul ul {
-    margin-top: 10px;
-    padding-left: 20px;
-  }
-  
-  ul ul li {
-    margin: 5px 0;
-  }
-  
-  a {
-    display: inline-block;
-    margin-top: 25px;
-    color: #7289da;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  
-  hr {
-    border: 1px solid #444;
-    margin: 40px auto;
-    width: 60%;
-  }
-  
+}

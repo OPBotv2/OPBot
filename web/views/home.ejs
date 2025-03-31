@@ -1,28 +1,98 @@
-<!-- web/views/home.ejs -->
 <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Willkommen beim OPBot</title>
+  <title>Willkommen bei OPBot</title>
   <link rel="stylesheet" href="/css/home.css">
+  <script defer src="/js/navbar.js"></script>
+  <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon">
 </head>
 <body>
-  <h1>🎉 Willkommen beim OPBot Dashboard</h1>
 
-  <% if (user) { %>
-    <div class="user-info">
-      <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="Avatar">
-      <p>Eingeloggt als <strong><%= user.username %>#<%= user.discriminator %></strong></p>
-      <p><a href="/dashboard" class="login-btn">➡️ Zum Dashboard</a></p>
-      <p><a href="/logout" class="login-btn">🚪 Logout</a></p>
-    </div>
-  <% } else { %>
-    <div class="login-box">
-      <p>🔐 Melde dich mit Discord an, um dein Dashboard zu verwalten.</p>
-      <a href="/auth/discord" class="login-btn">Mit Discord einloggen</a>
-    </div>
-  <% } %>
+  <!-- ✅ Navbar -->
+  <nav class="navbar">
+    <h1>🚀 OPBot Dashboard</h1>
 
-  <footer>© OPBot Dashboard</footer>
+    <div class="hamburger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>    
+
+    <div class="nav-links" id="navbarLinks">
+      <a href="/">🏠 Home</a>
+      <% if (user) { %>
+        <a href="/dashboard">📊 Dashboard</a>
+        <a href="/logout">🚪 Logout</a>
+      <% } else { %>
+        <a href="/auth/discord">🔐 Login</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <!-- 👋 Willkommen -->
+    <section class="welcome">
+      <h2>🎉 Willkommen beim OPBot Dashboard</h2>
+      <% if (!user) { %>
+        <p>🔐 <a href="/auth/discord">Mit Discord einloggen</a></p>
+      <% } %>
+    </section>
+
+    <!-- 📊 Bot-Statistiken -->
+    <section class="stats">
+      <div class="stat-card">
+        <span>⏱️ Online-Zeit</span>
+        <strong><%= uptime || 'Noch keine Daten' %></strong>
+      </div>
+      <div class="stat-card">
+        <span>🌐 Server</span>
+        <strong><%= serverCount || '0' %></strong>
+      </div>
+      <div class="stat-card">
+        <span>👥 Nutzer</span>
+        <strong><%= userCount || '0' %></strong>
+      </div>
+    </section>
+
+    <!-- 🛠️ Funktionen -->
+    <section class="features">
+      <h3>✨ Funktionen von OPBot</h3>
+      <ul>
+        <li>💸 Wirtschaftssystem</li>
+        <li>🛠️ SlashCommands</li>
+        <li>📦 Changelog-Postings</li>
+        <li>👥 Team- & Mod-Funktionen</li>
+        <li>🌐 Echtzeit-Dashboard</li>
+        <li>🧩 Erweiterbar mit Modulen & APIs</li>
+      </ul>
+    </section>
+
+    <!-- ❓ Warum OPBot -->
+    <section class="why-opbot">
+      <h3>❓ Warum OPBot?</h3>
+      <ul>
+        <li>✅ Zuverlässig & stabil</li>
+        <li>⚙️ Leicht anpassbar</li>
+        <li>💙 Open Source & Community-freundlich</li>
+      </ul>
+      <p>
+        OPBot kombiniert Leistung mit Benutzerfreundlichkeit. Ob für kleine Server oder große Communities – alles ist modular, performant und erweiterbar. Mit Dashboard, API und regelmäßigen Updates bist du immer am Puls.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- 🔻 Footer -->
+  <footer>
+    <p>© <%= new Date().getFullYear() %> OPBot Dashboard – made with 💜</p>
+    <p>
+      <a href="https://github.com/OPBotv2/OPBot" target="_blank">GitHub</a> · 
+      <a href="/dashboard">Dashboard</a> · 
+      <a href="/impressum">Impressum</a>
+    </p>
+  </footer>
+
 </body>
 </html>

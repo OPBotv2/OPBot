@@ -2,54 +2,99 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>🔧 Einstellungen für <%= guildId %></title>
+  <title>🔧 <%= guildName || 'Server' %> – Verwaltung</title>
   <link rel="stylesheet" href="/css/guild.css">
+  <script defer src="/js/guild.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon">
 </head>
 <body>
-  <h1>🔧 Einstellungen für Server <code><%= guildId %></code></h1>
+  <div class="dashboard-container">
 
-  <% if (message) { %>
-    <p style="color:red"><%= message %></p>
-  <% } %>
+    <!-- ☰ Hamburger -->
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
 
-  <% if (settings) { %>
-    <form action="/api/settings/<%= guildId %>" method="POST">
-      <label>Prefix:</label><br>
-      <input type="text" name="prefix" value="<%= settings.prefix %>" /><br><br>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>⚙️ OPBot</h2>
+        <p class="server-name"><%= guildName %></p>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/" class="nav-link">🏠 Home</a></li>
+          <li><a href="#settings" class="nav-link">⚙️ Einstellungen</a></li>
+          <li><a href="#changelogs" class="nav-link">📦 Changelogs</a></li>
+          <li><a href="#moderation" class="nav-link">🛡️ Moderation</a></li>
+          <li><a href="#welcome" class="nav-link">👋 Welcome</a></li>
+          <li><a href="/dashboard" class="nav-link">🔙 Zurück</a></li>
+        </ul>
+      </nav>
+    </aside>
 
-      <label>Changelog Channel ID:</label><br>
-      <input type="text" name="changelog_channel_id" value="<%= settings.changelog_channel_id %>" /><br><br>
+    <!-- Main Content -->
+    <main class="main-content">
+      <h1>🛠️ Verwaltung – <%= guildName %></h1>
 
-      <label>Economy aktivieren:</label>
-      <input type="checkbox" name="economy_enabled" <%= settings.economy_enabled ? 'checked' : '' %> /><br><br>
+      <% if (message) { %>
+        <p class="error"><%= message %></p>
+      <% } %>
 
-      <label>Premium:</label>
-      <input type="checkbox" name="is_premium" <%= settings.is_premium ? 'checked' : '' %> /><br><br>
+      <% if (settings) { %>
+        <section id="settings">
+          <h2>⚙️ Bot-Einstellungen</h2>
+          <form action="/api/settings/<%= guildId %>" method="POST">
+            <label>Prefix</label>
+            <input type="text" name="prefix" value="<%= settings.prefix %>">
 
-      <button type="submit">💾 Speichern</button>
-    </form>
-  <% } %>
+            <label>Changelog Channel ID</label>
+            <input type="text" name="changelog_channel_id" value="<%= settings.changelog_channel_id %>">
 
-  <hr>
-  <h2>📦 Changelogs</h2>
+            <label>Economy aktivieren</label>
+            <input type="checkbox" name="economy_enabled" <%= settings.economy_enabled ? 'checked' : '' %>>
 
-  <% if (changelogs && changelogs.length > 0) { %>
-    <ul>
-      <% changelogs.forEach(log => { %>
-        <li>
-          <strong><%= log.version %></strong> – <%= log.date %><br>
-          <ul>
-            <% log.entries.forEach(entry => { %>
-              <li>• <%= entry %></li>
+            <label>Premium</label>
+            <input type="checkbox" name="is_premium" <%= settings.is_premium ? 'checked' : '' %>>
+
+            <button type="submit">💾 Speichern</button>
+          </form>
+        </section>
+      <% } %>
+
+      <hr>
+
+      <section id="changelogs">
+        <h2>📦 Changelogs</h2>
+        <% if (changelogs && changelogs.length > 0) { %>
+          <ul class="changelog-list">
+            <% changelogs.forEach(log => { %>
+              <li>
+                <strong><%= log.version %></strong> – <%= log.date %>
+                <ul>
+                  <% log.entries.forEach(entry => { %>
+                    <li>• <%= entry %></li>
+                  <% }) %>
+                </ul>
+              </li>
             <% }) %>
           </ul>
-        </li>
-      <% }) %>
-    </ul>
-  <% } else { %>
-    <p>📭 Keine Changelogs vorhanden.</p>
-  <% } %>
+        <% } else { %>
+          <p>📭 Keine Changelogs vorhanden.</p>
+        <% } %>
+      </section>
 
-  <p><a href="/dashboard">⬅️ Zurück zur Übersicht</a></p>
+      <section id="moderation">
+        <h2>🛡️ Moderation</h2>
+        <p>Hier könntest du später Bans, Mutes, Warns etc. verwalten.</p>
+      </section>
+
+      <section id="welcome">
+        <h2>👋 Welcome-System</h2>
+        <p>Hier folgen bald Einstellungen für Willkommensnachrichten.</p>
+      </section>
+
+      <div id="toast" class="toast">✅ Gespeichert</div>
+    </main>
+  </div>
 </body>
 </html>

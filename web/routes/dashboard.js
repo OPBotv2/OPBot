@@ -34,13 +34,18 @@ router.get('/:guildId', async (req, res) => {
   const settings = await getGuildSettings(guildId);
   const changelogs = await getAllChangelogs(guildId);
 
+  // Guild aus dem Client holen
+  const guild = req.app.locals.client?.guilds?.cache?.get(guildId);
+
   res.render('dashboard/guild', {
     user: req.user,
     guildId,
+    guildName: guild?.name || 'Unbekannter Server',
     settings,
     changelogs,
     message: settings ? null : 'Keine Einstellungen gefunden.'
   });
 });
+
 
 module.exports = router;

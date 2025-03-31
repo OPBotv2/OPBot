@@ -77,8 +77,27 @@ app.use('/api/settings', isAuthenticated, settingsApi);
 
 // Home
 app.get('/', (req, res) => {
-  res.render('home', { user: req.user });
+  const client = app.locals.client; // falls du den Bot-Client gespeichert hast
+
+  const uptime = client.uptime;
+  const serverCount = client.guilds.cache.size;
+  const userCount = client.guilds.cache.reduce((acc, g) => acc + g.memberCount, 0);
+
+  res.render('home', {
+    user: req.user,
+    uptime: formatUptime(uptime),
+    serverCount,
+    userCount
+  });
 });
+
+function formatUptime(ms) {
+  const seconds = Math.floor(ms / 1000) % 60;
+  const minutes = Math.floor(ms / (1000 * 60)) % 60;
+  const hours = Math.floor(ms / (1000 * 60 * 60)) % 24;
+  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+  return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
 
 // 🔍 Debug
 app.get('/debug', (req, res) => {

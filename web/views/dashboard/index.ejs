@@ -2,47 +2,53 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>📊 Dashboard Übersicht</title>
   <link rel="stylesheet" href="/css/index.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script defer src="/js/navbar.js"></script>
+  <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon">
 </head>
 <body>
-  <header>
-    <h1>📊 Deine Server</h1>
-  </header>
 
-  <main>
-    <div class="guilds">
-      <% guilds.forEach(g => { %>
-        <div class="guild-card">
-          <img src="<%= g.iconURL || 'https://cdn.discordapp.com/embed/avatars/1.png' %>" alt="Guild Icon" class="guild-icon">
+  <!-- 🔝 Navbar -->
+  <nav class="navbar">
+    <div class="nav-brand">🚀 OPBot Dashboard</div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">🏠 Home</a></li>
+      <li><a href="/dashboard">📊 Übersicht</a></li>
+      <li><a href="/logout">🚪 Logout</a></li>
+    </ul>
+    <button class="hamburger" onclick="toggleNav()">☰</button>
+  </nav>
 
-          <div class="guild-info">
-            <h2 class="guild-name"><%= g.name %></h2>
-            <p class="status">
-              <% if (g.botInGuild) { %>
-                ✅ Bot ist drin
-              <% } else { %>
-                ❌ Bot fehlt
-              <% } %>
-            </p>
+  <h1>📊 Deine Server</h1>
 
-            <% if (g.botInGuild) { %>
-              <a href="/dashboard/<%= g.id %>" class="manage-btn">🔧 Einstellungen</a>
-            <% } else { %>
-              <a href="https://discord.com/oauth2/authorize?client_id=<%= clientId %>&scope=bot+applications.commands&permissions=8&guild_id=<%= g.id %>" class="invite-btn">
-                ➕ Bot einladen
-              </a>
-            <% } %>
-          </div>
+  <div class="guilds">
+    <% guilds.forEach(g => { %>
+      <div class="guild-card">
+        <img src="<%= g.iconURL || 'https://cdn.discordapp.com/embed/avatars/1.png' %>" alt="Guild Icon">
+        <div class="guild-name"><%= g.name %></div>
+        <div class="status">
+          <% if (g.botInGuild) { %>
+            ✅ Bot ist drin
+          <% } else { %>
+            ❌ Bot fehlt
+          <% } %>
         </div>
-      <% }) %>
-    </div>
-  </main>
+        <% if (g.botInGuild) { %>
+          <a href="/dashboard/<%= g.id %>" class="manage-btn">🔧 Einstellungen</a>
+        <% } else { %>
+          <a href="https://discord.com/oauth2/authorize?client_id=<%= clientId %>&scope=bot+applications.commands&permissions=8&guild_id=<%= g.id %>" class="manage-btn">
+            ➕ Bot einladen
+          </a>
+        <% } %>
+      </div>
+    <% }) %>
+  </div>
 
   <footer>
-    <p><a href="/logout">🚪 Logout</a></p>
     <p>© OPBot Dashboard</p>
   </footer>
+
 </body>
 </html>
