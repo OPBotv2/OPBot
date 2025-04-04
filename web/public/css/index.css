@@ -113,6 +113,40 @@ h1 {
   background-color: #4752c4;
 }
 
+.guild-card.admin {
+  border: 2px solid gold;
+}
+
+.badge {
+  font-size: 0.8rem;
+  background-color: #ffcc00;
+  color: #000;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+}
+
+.commands-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.command-card {
+  background-color: #1e1e2f;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 1rem;
+  color: #fff;
+}
+
+.command-card h2 {
+  margin-top: 0;
+  color: #00bfff;
+}
+
+
 /* 🔻 Footer */
 footer {
   margin-top: 50px;

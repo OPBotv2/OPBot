@@ -8,7 +8,9 @@ const { getAllChangelogs } = require('../../database/changelogs');
 router.get('/', async (req, res) => {
   const userGuilds = req.user.guilds || [];
 
-  const enrichedGuilds = userGuilds.map(guild => {
+  const enrichedGuilds = userGuilds
+  .filter(guild => (guild.permissions & 0x00000008) === 0x00000008) // Nur Admins
+  .map(guild => {
     const botInGuild = req.app.locals.client?.guilds?.cache?.has(guild.id) || false;
     const iconURL = guild.icon
       ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
@@ -17,7 +19,8 @@ router.get('/', async (req, res) => {
     return {
       ...guild,
       botInGuild,
-      iconURL
+      iconURL,
+      isAdmin: true // explizit setzen für das Template
     };
   });
 
@@ -47,5 +50,16 @@ router.get('/:guildId', async (req, res) => {
   });
 });
 
+router.get('/commands', (req, res) => {
+  const commands = req.app.locals.client?.commands?.map(cmd => ({
+    name: cmd.name,
+    description: cmd.description
+  })) || [];
+
+  res.render('dashboard/commands', {
+    user: req.user,
+    commands
+  });
+});
 
 module.exports = router;

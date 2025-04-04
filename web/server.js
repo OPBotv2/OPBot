@@ -74,6 +74,32 @@ function isAuthenticated(req, res, next) {
 // ─────────────────────────────────────────────
 app.use('/dashboard', isAuthenticated, dashboardRoutes);
 app.use('/api/settings', isAuthenticated, settingsApi);
+// 🔗 Öffentliche Route für Befehlsübersicht unter /commands
+app.get('/commands', isAuthenticated, async (req, res) => {
+  try {
+    const fetchedCommands = await app.locals.client.application.commands.fetch();
+
+    const commands = Array.from(fetchedCommands.values()).map(cmd => ({
+      name: cmd.name,
+      description: cmd.description
+    }));
+
+    res.render('dashboard/commands', {
+      user: req.user,
+      commands
+    });
+  } catch (err) {
+    console.error("Fehler beim Laden der Commands:", err);
+    res.render('dashboard/commands', {
+      user: req.user,
+      commands: [],
+      error: "Fehler beim Laden der Befehle"
+    });
+  }
+});
+
+
+
 
 // Home
 app.get('/', (req, res) => {

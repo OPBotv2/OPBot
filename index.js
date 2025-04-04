@@ -8,6 +8,7 @@ const { loadButtons } = require('./handlers/buttonHandler');
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8085;
+const commandHandler = require('./handlers/commandHandler')
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
@@ -19,6 +20,7 @@ log.init(client);
 
 setupDatabase();
 loadButtons();
+commandHandler(client);
 app.use(express.json());
 
 for (const folder of commandFolders) {

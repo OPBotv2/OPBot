@@ -16,6 +16,7 @@
     <ul class="nav-links" id="nav-links">
       <li><a href="/">🏠 Home</a></li>
       <li><a href="/dashboard">📊 Übersicht</a></li>
+      <li><a href="/commands">📖 Befehle</a></li>
       <li><a href="/logout">🚪 Logout</a></li>
     </ul>
     <button class="hamburger" onclick="toggleNav()">☰</button>
@@ -24,24 +25,31 @@
   <h1>📊 Deine Server</h1>
 
   <div class="guilds">
-    <% guilds.forEach(g => { %>
+    <!-- ✅ Bot ist im Server & du bist Admin (A-Z) -->
+    <% guilds
+      .filter(g => g.botInGuild && g.isAdmin)
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach(g => { %>
+      <div class="guild-card admin">
+        <img src="<%= g.iconURL || 'https://cdn.discordapp.com/embed/avatars/1.png' %>" alt="Guild Icon">
+        <div class="guild-name"><%= g.name %> <span class="badge">🛡️ Admin</span></div>
+        <div class="status">✅ Bot ist drin</div>
+        <a href="/dashboard/<%= g.id %>" class="manage-btn">🔧 Einstellungen</a>
+      </div>
+    <% }) %>
+
+    <!-- ❌ Bot ist nicht im Server & du bist Admin (A-Z) -->
+    <% guilds
+      .filter(g => !g.botInGuild && g.isAdmin)
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach(g => { %>
       <div class="guild-card">
         <img src="<%= g.iconURL || 'https://cdn.discordapp.com/embed/avatars/1.png' %>" alt="Guild Icon">
-        <div class="guild-name"><%= g.name %></div>
-        <div class="status">
-          <% if (g.botInGuild) { %>
-            ✅ Bot ist drin
-          <% } else { %>
-            ❌ Bot fehlt
-          <% } %>
-        </div>
-        <% if (g.botInGuild) { %>
-          <a href="/dashboard/<%= g.id %>" class="manage-btn">🔧 Einstellungen</a>
-        <% } else { %>
-          <a href="https://discord.com/oauth2/authorize?client_id=<%= clientId %>&scope=bot+applications.commands&permissions=8&guild_id=<%= g.id %>" class="manage-btn">
-            ➕ Bot einladen
-          </a>
-        <% } %>
+        <div class="guild-name"><%= g.name %> <span class="badge">🛡️ Admin</span></div>
+        <div class="status">❌ Bot fehlt</div>
+        <a href="https://discord.com/oauth2/authorize?client_id=<%= clientId %>&scope=bot+applications.commands&permissions=8&guild_id=<%= g.id %>" class="manage-btn">
+          ➕ Bot einladen
+        </a>
       </div>
     <% }) %>
   </div>

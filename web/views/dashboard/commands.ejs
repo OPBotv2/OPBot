@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>📖 Befehlsübersicht</title>
+  <link rel="stylesheet" href="/css/index.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script defer src="/js/navbar.js"></script>
+  <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon">
+</head>
+<body>
+
+  <!-- 🔝 Navbar -->
+  <nav class="navbar">
+    <div class="nav-brand">🚀 OPBot Dashboard</div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/">🏠 Home</a></li>
+      <li><a href="/dashboard">📊 Übersicht</a></li>
+      <li><a href="/dashboard/commands">📖 Befehle</a></li>
+      <li><a href="/logout">🚪 Logout</a></li>
+    </ul>
+    <button class="hamburger" onclick="toggleNav()">☰</button>
+  </nav>
+
+  <h1>📖 OPBot Befehlsübersicht</h1>
+
+  <div class="commands-list">
+    <% commands.forEach(cmd => { %>
+      <div class="command-card">
+        <h2><code>/<%= cmd.name %></code></h2>
+        <p><%= cmd.description || 'Keine Beschreibung verfügbar.' %></p>
+      </div>
+    <% }) %>
+  </div>
+
+  <footer>
+    <p>© OPBot Dashboard</p>
+  </footer>
+
+</body>
+</html>
