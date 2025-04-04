@@ -75,7 +75,7 @@ function isAuthenticated(req, res, next) {
 app.use('/dashboard', isAuthenticated, dashboardRoutes);
 app.use('/api/settings', isAuthenticated, settingsApi);
 // 🔗 Öffentliche Route für Befehlsübersicht unter /commands
-app.get('/commands', isAuthenticated, async (req, res) => {
+app.get('/commands', async (req, res) => {
   try {
     const fetchedCommands = await app.locals.client.application.commands.fetch();
 
@@ -97,9 +97,6 @@ app.get('/commands', isAuthenticated, async (req, res) => {
     });
   }
 });
-
-
-
 
 // Home
 app.get('/', (req, res) => {

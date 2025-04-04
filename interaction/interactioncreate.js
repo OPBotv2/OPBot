@@ -20,15 +20,14 @@ module.exports = async (interaction, client) => {
     if (interaction.isButton()) {
         const customId = interaction.customId;
         const handler = getButtonHandler(customId);
-
+    
         if (!handler) {
-            // Kein externer Button – z. B. intern im Help-Command genutzt
             log.warn(`Kein Button-Handler für "${customId}" gefunden.`);
             return;
         }
-
+    
         try {
-            await handler(interaction, client);
+            await handler.execute(interaction, client); // ✅ fix hier
             log.info(`Button ausgeführt: ${customId} von ${interaction.user.tag}`);
         } catch (err) {
             log.error(`Fehler im Button "${customId}": ${err.message}`);
@@ -39,5 +38,5 @@ module.exports = async (interaction, client) => {
                 }).catch(() => {});
             }
         }
-    }
+    }    
 };

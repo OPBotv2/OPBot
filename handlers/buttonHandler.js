@@ -13,14 +13,18 @@ function loadButtons(dir = path.join(__dirname, '..', 'buttons')) {
         if (stat.isDirectory()) {
             loadButtons(fullPath);
         } else if (file.endsWith('.js')) {
-            const relativePath = path.relative(path.join(__dirname, '..', 'buttons'), fullPath);
-            const customId = relativePath.replace(/\\/g, '/').replace(/\.js$/, '');
-
             try {
                 const handler = require(fullPath);
-                buttons.set(customId, handler);
+
+                if (!handler.customId || typeof handler.execute !== 'function') {
+                    console.warn(`⚠️  Button-Datei ${file} hat keinen gültigen customId oder execute.`);
+                    continue;
+                }
+
+                buttons.set(handler.customId, handler);
+                console.log(`✅ Button geladen: ${handler.customId}`);
             } catch (err) {
-                console.warn(`❌ Fehler beim Laden von Button ${customId}:`, err);
+                console.warn(`❌ Fehler beim Laden von Button in ${file}:`, err);
             }
         }
     }

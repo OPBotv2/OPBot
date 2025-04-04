@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>🎟️ Tickets – <%= guild.name %></title>
+  <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">🚀 OPBot Dashboard</div>
+    <ul class="nav-links">
+      <li><a href="/">🏠 Home</a></li>
+      <li><a href="/dashboard">📊 Übersicht</a></li>
+      <li><a href="/logout">🚪 Logout</a></li>
+    </ul>
+  </nav>
+
+  <h1>🎟️ Tickets für <%= guild.name %></h1>
+
+  <div class="tickets">
+    <% if (tickets.length === 0) { %>
+      <p>Keine Tickets vorhanden.</p>
+    <% } else { %>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>User ID</th>
+            <th>Kategorie</th>
+            <th>Status</th>
+            <th>Channel ID</th>
+            <th>Erstellt am</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% tickets.forEach((t, i) => { %>
+            <tr>
+              <td><%= i + 1 %></td>
+              <td><%= t.user_id %></td>
+              <td><%= t.category %></td>
+              <td><%= t.status %></td>
+              <td><code><%= t.channel_id %></code></td>
+              <td><%= new Date(t.created_at).toLocaleString() %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+
+  <footer>
+    <p>© OPBot Dashboard</p>
+  </footer>
+
+</body>
+</html>

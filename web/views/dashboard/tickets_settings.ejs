@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>⚙️ Ticket Einstellungen – <%= guild.name %></title>
+  <link rel="stylesheet" href="/css/tickets_settings.css">
+</head>
+<body>
+
+  <nav>
+    <ul>
+      <li><a href="/">🏠 Home</a></li>
+      <li><a href="/dashboard/<%= guild.id %>/tickets">🎫 Tickets</a></li>
+      <li><a href="/dashboard/<%= guild.id %>/settings/tickets">⚙️ Ticket Einstellungen</a></li>
+      <li><a href="/dashboard">🔙 Zurück</a></li>
+    </ul>
+  </nav>
+
+  <h1>⚙️ Ticket-Einstellungen für <%= guild.name %></h1>
+
+  <form action="/dashboard/<%= guild.id %>/settings/tickets" method="POST" class="form-section">
+    <label for="ticket_channel">📩 Ticket-Kanal (Channel-ID)</label>
+    <input type="text" name="ticket_channel" id="ticket_channel" value="<%= settings.ticket_channel || '' %>" placeholder="z. B. 1234567890">
+
+    <label for="default_role">👥 Standardrolle mit Zugriff (Role-ID)</label>
+    <input type="text" name="default_role" id="default_role" value="<%= settings.default_role || '' %>" placeholder="z. B. 9876543210">
+
+    <label>
+      <input type="checkbox" name="allow_close_by_creator" <%= settings.allow_close_by_creator ? 'checked' : '' %>>
+      ✅ Ticket-Ersteller darf selbst schließen
+    </label>
+
+    <label>
+      <input type="checkbox" name="auto_delete_after_close" <%= settings.auto_delete_after_close ? 'checked' : '' %>>
+      🧼 Ticket automatisch nach dem Schließen löschen
+    </label>
+
+    <button type="submit">💾 Speichern</button>
+  </form>
+
+  <footer>
+    <p>© OPBot Dashboard</p>
+  </footer>
+
+</body>
+</html>

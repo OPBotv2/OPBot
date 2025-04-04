@@ -66,6 +66,28 @@ module.exports = async function setupDatabase() {
         )
     `);
     
+    await db.query(`
+        CREATE TABLE IF NOT EXISTS tickets (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            guild_id VARCHAR(32) NOT NULL,
+            user_id VARCHAR(32) NOT NULL,
+            channel_id VARCHAR(32) NOT NULL,
+            category VARCHAR(50),
+            status VARCHAR(20) DEFAULT 'offen',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `);    
+
+    await db.query(`
+        CREATE TABLE IF NOT EXISTS ticket_settings (
+            guild_id VARCHAR(32) PRIMARY KEY,
+            ticket_channel VARCHAR(32),
+            allow_close_by_creator BOOLEAN DEFAULT true,
+            auto_delete_after_close BOOLEAN DEFAULT true,
+            default_role VARCHAR(32)
+        )
+    `);    
+
     log.info('✅ Datenbanktabellen wurden überprüft/erstellt.');
     await log.discord(`✅ Datenbanktabellen wurden überprüft/erstellt.`, 'info');
 };
