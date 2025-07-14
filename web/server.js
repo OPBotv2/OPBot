@@ -9,6 +9,7 @@ const DiscordStrategy = require('passport-discord').Strategy;
 const path = require('path');
 const dashboardRoutes = require('./routes/dashboard');
 const settingsApi = require('./routes/api/settings');
+const economy = require('../database/economy');
 
 const app = express();
 const PORT = process.env.DASHBOARD_PORT || 3000;
@@ -94,6 +95,24 @@ app.get('/commands', async (req, res) => {
       user: req.user,
       commands: [],
       error: "Fehler beim Laden der Befehle"
+    });
+  }
+});
+
+// 🔝 Öffentliche Rangliste
+app.get('/leaderboard', async (req, res) => {
+  try {
+    const topUsers = await economy.getTopUsers();
+    res.render('leaderboard', {
+      user: req.user,
+      topUsers
+    });
+  } catch (err) {
+    console.error('Fehler beim Laden des Leaderboards:', err);
+    res.render('leaderboard', {
+      user: req.user,
+      topUsers: [],
+      error: 'Fehler beim Laden der Rangliste'
     });
   }
 });
