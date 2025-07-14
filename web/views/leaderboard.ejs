@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>🏆 Rangliste</title>
+  <link rel="stylesheet" href="/css/home.css">
+  <script defer src="/js/navbar.js"></script>
+  <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon">
+</head>
+<body>
+  <nav class="navbar">
+    <h1>🚀 OPBot Dashboard</h1>
+    <div class="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="nav-links" id="navbarLinks">
+      <a href="/">🏠 Home</a>
+      <a href="/commands">📖 Befehle</a>
+      <a href="/leaderboard">🏆 Rangliste</a>
+      <% if (user) { %>
+        <a href="/dashboard">📊 Dashboard</a>
+        <a href="/logout">🚪 Logout</a>
+      <% } else { %>
+        <a href="/auth/discord">🔐 Login</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h2>🏆 Top 10 Nutzer</h2>
+    <table class="leaderboard">
+      <tr><th>Platz</th><th>User</th><th>Coins</th></tr>
+      <% topUsers.forEach((u, i) => { %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= `<@${u.user_id}>` %></td>
+          <td><%= u.balance.toLocaleString() %></td>
+        </tr>
+      <% }) %>
+    </table>
+    <% if (error) { %>
+      <p><%= error %></p>
+    <% } %>
+  </main>
+</body>
+</html>
